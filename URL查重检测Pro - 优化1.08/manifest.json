@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "查重Pro",
+  "version": "1.4",
+  "description": "【稳定版】用于检测和管理表单中的重复内容，并新增稳定的自检功能。",
+  "author": "艾合 ",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mate-label.appendata.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "system.display",
+    "storage"
+  ]
+}

@@ -1,0 +1,251 @@
+/* --- 全局颜色定义 --- */
+:root {
+    /* 原有 Prestige Gold 主题 */
+    --theme-bg: linear-gradient(160deg, #fffaf2 0%, #fdeedc 100%); 
+    --theme-primary-glow: #d4af37;  
+    --theme-text: #3d3d3d;          
+    --theme-border: #c8a445;        
+    --theme-shadow: rgba(180, 140, 60, 0.2); 
+
+    /* 【新增】新的颜色变量 */
+    --self-check-bg: #e8f5e9; /* 浅绿色背景 (Material Design Green 50) */
+    --all-buttons-bg: #fff9c4; /* 浅黄色底色 (Material Design Yellow 100) */
+    --all-buttons-hover-bg: #ffeb3b; /* 高亮金黄色悬停 (Material Design Yellow 500) */
+    --all-buttons-text: #000000; /* 黑色字体 */
+}
+
+/* --- 弹窗通用样式 --- */
+.plugin-popup-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 250, 240, 0.5); backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100499;
+}
+.plugin-popup-box {
+    position: relative; overflow: hidden;
+    background: var(--theme-bg);
+    border: 1px solid var(--theme-border);
+    box-shadow: 0 8px 25px var(--theme-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+    color: var(--theme-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    border-radius: 8px; padding: 15px;
+}
+.plugin-popup-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 60%);
+    pointer-events: none;
+}
+
+/* --- 悬浮控制面板 --- */
+#duplicate-checker-panel {
+    --panel-base-width: 150px;
+    width: var(--panel-base-width); 
+    border-radius: 8px; 
+    padding: 0;
+    z-index: 10004;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    /* 确保子元素排成一行 */
+}
+
+#dc-main-content {
+    width: var(--panel-base-width);
+    padding: 6px;
+    flex-shrink: 0;
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out; /* 添加平滑过渡 */
+}
+#self-check-container {
+    width: calc(var(--panel-base-width) * 1.5); 
+    padding: 6px;
+    border-left: 2px solid var(--theme-border);
+    background: var(--self-check-bg);
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+#duplicate-checker-panel.self-check-active {
+    width: calc(var(--panel-base-width) * 2.5); 
+}
+#duplicate-checker-panel.self-check-active #self-check-container {
+    display: flex;
+}
+
+#duplicate-checker-panel #dc-panel-header {
+    padding: 4px 0; border-bottom: 1px solid var(--theme-border);
+    font-weight: bold; text-align: center; position: relative; z-index: 2;
+    margin-bottom: 5px; background: transparent; transition: border-bottom-color 0.3s;
+    cursor: grab;
+}
+#duplicate-checker-panel #dc-panel-header:active { cursor: grabbing; }
+#duplicate-checker-panel #dc-main-content div { position: relative; z-index: 2; }
+#duplicate-checker-panel label { display: flex; align-items: center; font-size: 13px; }
+#duplicate-checker-panel input[type="checkbox"] { filter: none; }
+
+/* 所有按钮的样式 */
+#duplicate-checker-panel button {
+    margin: 4px 0; width: 100%;
+    background-color: var(--all-buttons-bg); 
+    color: var(--all-buttons-text) !important;
+    border: 1px solid var(--theme-border);
+    border-radius: 4px; padding: 5px 0;
+    cursor: pointer; transition: all 0.2s ease-in-out; position: relative; z-index: 2;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+}
+#duplicate-checker-panel button:hover {
+    background-color: var(--all-buttons-hover-bg); 
+    border-color: var(--theme-primary-glow);
+    box-shadow: 0 0 10px var(--all-buttons-hover-bg), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+#start-self-check:disabled, #start-self-check:disabled:hover {
+    background-color: #ccc; 
+    color: #777 !important;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- 最小化状态的样式调整 --- */
+#duplicate-checker-panel.minimized {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
+    border-radius: 50%;
+    overflow: hidden; /* 确保内容不出圈 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 最小化时强制 main-content 无边距并占满圆圈 */
+#duplicate-checker-panel.minimized #dc-main-content {
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 最小化时 header 样式调整，确保居中 */
+#duplicate-checker-panel.minimized #dc-panel-header {
+    border-bottom: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+}
+
+/* 最小化时隐藏标题 */
+#duplicate-checker-panel.minimized #dc-panel-title {
+    display: none !important;
+}
+
+/* 最小化时调整图标大小和位置 */
+#duplicate-checker-panel.minimized #dc-panel-icon {
+    font-size: 24px !important;
+    margin: 0 !important;
+    line-height: 1;
+    display: block;
+}
+
+/* 精确隐藏最小化时不需要的元素 */
+#duplicate-checker-panel.minimized #dc-main-content > *:not(#dc-panel-header) {
+    display: none !important;
+}
+#duplicate-checker-panel.minimized #self-check-container {
+    display: none !important;
+}
+
+
+/* --- 批量URL弹窗 (样式保持不变) --- */
+#batch-url-popup { width: 400px; max-width: 90%; display: flex; flex-direction: column; }
+#batch-url-popup > div:first-child { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; position: relative; z-index: 2; }
+#batch-url-popup strong { font-weight: bold; color: var(--theme-text); text-shadow: none; }
+#batch-url-popup #close-popup { background: transparent; border: none; color: var(--theme-text); font-size: 20px; cursor: pointer; transition: color 0.2s, text-shadow 0.2s; }
+#batch-url-popup #close-popup:hover { color: #d9534f; }
+#batch-url-popup textarea { background: #fefdf9; border: 1px solid var(--theme-border); color: var(--theme-text); border-radius: 4px; padding: 8px; resize: none; flex-grow: 1; width: 100%; box-sizing: border-box; position: relative; z-index: 2; }
+#batch-url-popup button#batch-submit { background: var(--theme-primary-glow); color: var(--theme-text); border: 1px solid var(--theme-border); border-radius: 4px; cursor: pointer; padding: 8px; margin-top: 10px; transition: all 0.2s ease-in-out; position: relative; z-index: 2; }
+#batch-url-popup button#batch-submit:hover { background: var(--all-buttons-hover-bg); border-color: var(--theme-primary-glow); box-shadow: 0 0 15px var(--all-buttons-hover-bg); }
+
+/* --- 废弃备注弹窗 (样式保持不变) --- */
+#remarks-box { width: 500px; max-width: 90%; }
+#remarks-box h3 {
+    margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 1px solid var(--theme-border);
+    position: relative; z-index: 2; text-align: center;
+}
+#remarks-list {
+    display: flex; flex-direction: row; flex-wrap: wrap;
+    gap: 10px; justify-content: center; position: relative; z-index: 2;
+}
+#remarks-list button {
+    padding: 10px; background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--theme-border); border-radius: 5px; color: var(--theme-text);
+    text-align: center; cursor: pointer; font-size: 14px; transition: all 0.2s ease-in-out;
+    flex: 1 1 220px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+#remarks-list button:hover {
+    background-color: var(--all-buttons-hover-bg); border-color: var(--theme-primary-glow);
+    transform: scale(1.02);
+}
+
+/* --- 自检功能样式 --- */
+.self-check-toggle-btn {
+    margin-top: 10px !important;
+    border-top: 2px solid var(--theme-border) !important;
+    border-radius: 4px !important;
+}
+
+#sc-url-counter {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--theme-text);
+}
+
+#sc-url-list {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    font-size: 12px;
+    flex-grow: 1;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+#sc-url-list li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 0;
+}
+.sc-url-seq {
+    flex-shrink: 0;
+    width: 30px;
+    text-align: right;
+    font-weight: bold;
+    color: #1a237e;
+}
+.sc-url-text {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-controls {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+.sc-controls button {
+    flex: 1;
+    border: 1px solid var(--theme-border) !important;
+}
